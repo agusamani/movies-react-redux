@@ -38,7 +38,7 @@ Agregar las carpetas actions, components, constants, middleware, reducers y stor
 ```
 
 * __src__: Carpeta donde estará el código fuente del front-end de nuestra app.
-    * __actions__: Imágenes y otros archivos estáticos.
+    * __actions__: Nuestras acciones que enviaremos a nuestro store.
     * __components__: Todos nuestros componentes de REACT junto con su CSS.
     * __constants__: Constantes a utilizar por la aplicación
     * __middleware__:  Intermediario que va a ser utilizado para validaciones
@@ -50,6 +50,10 @@ Agregar las carpetas actions, components, constants, middleware, reducers y stor
 Antes de empezar a codear, vamos a pensar un diseño para nuestra página y hacer una lista con los __componentes__ y __containers__ que vamos a tener.
 Empezaremos por los más pequeños y simples (los puramente presentacionales sobre todo).
 Cuando nos toque crear un __container__ de _Redux_ pensaremos las props del _Estado_ que vamos a mapear al container y las acciones que van a disparar. Luego codearemos primero las acciones, luego los reducers y por último el Container.
+
+### Componentes
+
+En nuestra carpeta `components`
 
 ### Rutas
 

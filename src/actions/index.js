@@ -17,3 +17,14 @@ export function getData(titulo) {
       });
   };
 }
+
+export function getMovieDetail(id) {
+  return async function(dispatch) {
+    const url = `http://www.omdbapi.com/?apikey=20dac387&i=${id}&plot=full`
+    return fetch(url)
+      .then(response => response.json())
+      .then(json => {
+        dispatch({ type: "MOVIE_DETAIL", payload: json });
+      });
+  }
+}

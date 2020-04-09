@@ -2,28 +2,35 @@ import { ADD_ARTICLE } from "../constants/action-types";
 
 const initialState = {
   articles: [],
-  remoteArticles: []
+  remoteArticles: [],
+  movieDetail: {}
 };
 
 function rootReducer(state = initialState, action) {
-  if (action.type === ADD_ARTICLE) {
-    return Object.assign({}, state, {
-      articles: state.articles.concat(action.payload)
-    });
+  switch (action.type) {
+    case ADD_ARTICLE:
+      return {
+        ...state,
+        articles: state.articles.concat(action.payload)
+      }
+    case "REMOVE_ARTICLE":
+      return {
+        ...state,
+        articles: state.articles.filter(item => item.title !== action.payload.title)
+      }
+    case "DATA_LOADED":
+      return {
+        ...state,
+        remoteArticles: action.payload.Search
+      };
+    case "MOVIE_DETAIL":
+      return {
+        ...state,
+        movieDetail: {...action.payload}
+      };
+    default:
+      return state
   }
-
-  if (action.type === "REMOVE_ARTICLE") {
-    return Object.assign({}, state, {
-      articles: state.articles.filter(item => item.title !== action.payload.title)
-    });
-  }
-
-  if (action.type === "DATA_LOADED") {
-    return Object.assign({}, state, {
-      remoteArticles: (action.payload.Search)
-    });
-  }
-  return state;
 }
 
 export default rootReducer;

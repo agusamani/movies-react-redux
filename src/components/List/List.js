@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { removeArticle } from "../actions/index";
+import { removeArticle } from "../../actions/index";
+import { Link } from 'react-router-dom';
+import './List.css';
 
 function mapStateToProps(state) {
   return {
@@ -22,8 +24,10 @@ export class ConnectedList extends Component {
         <h2>Películas Favoritas</h2>
         <ul>
           {this.props.articles && this.props.articles.map(el => (
-            <div className="row">
-              <li className="col-3">{el.title}</li>
+            <div className="row cnt">
+              <Link className="col-3" to={`/movie/${el.imdbID}`}>
+              {el.title}
+              </Link>
               <button className="col-1" onClick={() => this.props.removeArticle({title: el.title})}>X</button>
             </div>
           ))}

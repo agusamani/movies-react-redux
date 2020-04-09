@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import { addArticle } from "../actions/index";
 
-import './Form.css';
+// import './Form.css';
 
 function mapDispatchToProps(dispatch) {
   return {
@@ -30,6 +30,7 @@ class ConnectedForm extends Component {
     this.setState({ title: "" });
   }
   render() {
+    console.log('form')
     const { title } = this.state;
     return (
       <form onSubmit={this.handleSubmit}>

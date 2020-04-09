@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getData } from "../actions/index";
-import { addArticle } from "../actions/index";
+import { getData } from '../../actions/index';
+import { addArticle } from '../../actions/index';
+import { NavLink } from 'react-router-dom';
+import './Post.css';
+
 
 function mapStateToProps(state) {
   return {
@@ -35,10 +38,11 @@ export class Post extends Component {
 
   render() {
     const { title } = this.state;
+    console.log('props', this.props.articles)
     return (
       <div>
         <h2>OMDB Búsqueda</h2>
-        <form onSubmit={this.handleSubmit}>
+        <form className="form-container" onSubmit={this.handleSubmit}>
           <div>
             <label htmlFor="title">Película</label>
             <input
@@ -51,9 +55,12 @@ export class Post extends Component {
           <button type="submit">BUSCAR</button>
         </form>
         <ul>
-          {this.props.articles && this.props.articles.map(el => (
-            <div className="row">
-              <li className="col-3">{el.Title}</li>
+          {this.props.articles && this.props.articles.map((el, i) => (
+            <div key={i} className="row cnt" onClick={this.handleButton}>
+              <NavLink className="col-4" to={`/movie/${el.imdbID}`} >
+                {el.Title}
+              </NavLink>
+
               <button className="col-1" onClick={() => this.props.addArticle({title: el.Title})}>Fav</button>
             </div>
           ))}
