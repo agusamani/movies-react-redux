@@ -98,7 +98,7 @@ NavBar: sera un componente estatico, tendra los links que nos permitan navegar h
 
 <div style="text-align:center"><img src="img/NavBar.png"/></div><br>
 
-Buscador: Sera nuestra Home, nos permitira hacer pedidos a la API, traer la lista de peliculas y mostrarlas. Sera un componente de clase que maneje estados. Ej:
+Buscador: Sera nuestra Home, nos permitira hacer pedidos a la API, traer la lista de peliculas y mostrarlas. Sera un componente de clase. Ej:
 
 <div style="text-align:center"><img src="img/Buscador.png"/></div><br>
 
