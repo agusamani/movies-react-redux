@@ -1,11 +1,11 @@
-import { ADD_ARTICLE } from "../constants/action-types";
+import { ADD_MOVIE, REMOVE_MOVIE , DATA_LOADED , MOVIE_DETAIL } from "../constants/action-types";
 
 export function addArticle(payload) {
-  return { type: ADD_ARTICLE, payload };
+  return { type: ADD_MOVIE, payload };
 }
 
 export function removeArticle(payload) {
-  return { type: "REMOVE_ARTICLE", payload };
+  return { type: REMOVE_MOVIE, payload };
 }
 
 export function getData(titulo) {
@@ -13,18 +13,19 @@ export function getData(titulo) {
     return fetch("http://www.omdbapi.com/?apikey=20dac387&s=" + titulo)
       .then(response => response.json())
       .then(json => {
-        dispatch({ type: "DATA_LOADED", payload: json });
+        dispatch({ type: DATA_LOADED, payload: json });
       });
   };
 }
 
 export function getMovieDetail(id) {
-  return async function(dispatch) {
+  return function(dispatch) {
+    console.log('iddd',id)
     const url = `http://www.omdbapi.com/?apikey=20dac387&i=${id}&plot=full`
     return fetch(url)
       .then(response => response.json())
       .then(json => {
-        dispatch({ type: "MOVIE_DETAIL", payload: json });
+        dispatch({ type: MOVIE_DETAIL, payload: json });
       });
   }
 }

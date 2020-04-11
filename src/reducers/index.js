@@ -1,29 +1,29 @@
-import { ADD_ARTICLE } from "../constants/action-types";
+import { ADD_MOVIE, REMOVE_MOVIE, DATA_LOADED , MOVIE_DETAIL } from "../constants/action-types";
 
 const initialState = {
-  articles: [],
-  remoteArticles: [],
+  movies: [],
+  moviesLoaded: [],
   movieDetail: {}
 };
 
 function rootReducer(state = initialState, action) {
   switch (action.type) {
-    case ADD_ARTICLE:
+    case ADD_MOVIE:
       return {
         ...state,
-        articles: state.articles.concat(action.payload)
+        movies: state.movies.concat(action.payload)
       }
-    case "REMOVE_ARTICLE":
+    case REMOVE_MOVIE:
       return {
         ...state,
-        articles: state.articles.filter(item => item.title !== action.payload.title)
+        movies: state.movies.filter(item => item.title !== action.payload.title)
       }
-    case "DATA_LOADED":
+    case DATA_LOADED:
       return {
         ...state,
-        remoteArticles: action.payload.Search
+        moviesLoaded: action.payload.Search
       };
-    case "MOVIE_DETAIL":
+    case MOVIE_DETAIL:
       return {
         ...state,
         movieDetail: {...action.payload}

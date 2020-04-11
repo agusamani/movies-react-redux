@@ -38,7 +38,7 @@ Agregar las carpetas actions, components, constants, middleware, reducers y stor
 ```
 
 * __src__: Carpeta donde estará el código fuente del front-end de nuestra app.
-    * __actions__: Nuestras acciones que enviaremos a nuestro store.
+    * __actions__: Las acciones que enviaremos a nuestro store.
     * __components__: Todos nuestros componentes de REACT junto con su CSS.
     * __constants__: Constantes a utilizar por la aplicación
     * __middleware__:  Intermediario que va a ser utilizado para validaciones
@@ -51,84 +51,286 @@ Antes de empezar a codear, vamos a pensar un diseño para nuestra página y hace
 Empezaremos por los más pequeños y simples (los puramente presentacionales sobre todo).
 Cuando nos toque crear un __container__ de _Redux_ pensaremos las props del _Estado_ que vamos a mapear al container y las acciones que van a disparar. Luego codearemos primero las acciones, luego los reducers y por último el Container.
 
-### Componentes
-
-En nuestra carpeta `components`
 
 ### Rutas
 
 Nuestra aplicación tiene que tener un set de rutas ya definido para hacer la pagina navegable.
 
 * `/`: la ruta de home que tiene un input para hacer la búsqueda.
-* `/search`: tiene que mostrar los resultados de la búsqueda (un listado de resultados).
-* `/movie/:movieId`: muestra los detalles de una película en particular.
+* `/movie/:id`: muestra los detalles de una película en particular.
 * `/favs/`: muestra un listado de las películas favoritas, (cuando tengamos usuarios puede que esta ruta cambie).
 
 > Para poder emular lo de guardar a favoritos, vamos a guardar las películas favoritas en el __Estado__ de nuestra aplicación.
 
-### Instrucciones
+### Comenzamos
 
-1. Crear un reducer en la carpeta `reducers` que contenta un estado inicial de `favoritos` y por el momento que únicamente devuelva dicho estado. Recordar que es necesario pasarle una acción como segundo parámetro al reducer para indicarle que es lo que pretendemos que realice.
+Para poder comenzar tenemos que instalar las dependencias que utilizaremos. Tendran en el `package.json` ya las dependencias. Ahora hacemos:
 
-2. Crear el archivo `index.js` dentro de la carpeta `store` e inicializarlo con el método `createStore` que reciba como parámetro el reducer previamente creado.
+```javascript
+npm install
+```
 
-3. Crear un archivo `index.js` dentro de la carpeta `actions` y dentro del mismo crear una acción que llamaremos `addFavorito` para indicarle al reducer que queremos agregar una nueva película a nuestro listado de favoritos. Recordemos que las acciones de Redux no son más que objetos Javascript con dos propiedades: `type` y `payload`. En nuestro caso el `type` va a ser el nombre de la acción que definiremos como `ADD_FAVORITO` y el payload contendrá los datos de dicha película.
+Comemnzamos creando nuestros componentes. Dentro de nuestra carpeta `components` crearemos subcarpetas con nuestros nuestro archivo.js y .css para tener mas acomodado nuestro codigo.
+En la carpeta `components` crearemos 4 subcarpetas: `Buscador`. `Favorites`, `Movie`, `NavBar`. Y en cada una crearemos sus respectivos archivos .js y .css.
+`NavBar.js` sera nuestro Header que nos permitira navegar por nuestras rutas.
+`Buscador.js` sera nuestro Home, en donde buscaremos peliculas (llamando a la API) y las mostraremos en forma de lista.
+En `Favorites.js` mostraremos la lista de peliculas a las cuales seleccionamos como Favoritas.
+Y por ultimo en `Movie.js` sera nuestro compente en donde mostraremos una pelicula en detalle. Accedemos a este componente haciendo click dentro de nuestro buscador o en nuestras favoritas.
 
-4. [Opcional] Una buena práctica consiste en definir los nombres de las acciones que son strings dentro de un archivo destinado a constantes para evitar errores de tipeo o duplicados, por lo tanto crear un archivo denominado `action-types.js` en la carpeta `constants` y definir allí una constante para utilizar en la acción recién creada (No olvidarse de actualizar el archivo de `actions`).
+### Armemos nuestro enrutado:
 
-5. Actualizar el reducer para que si la acción que recibe es la de `ADD_FAVORITO`, agregue al estado de la aplicación la película que se encuentra en su payload. [Investigar el principio de inmutabilidad de Redux para encontrar la forma correcta de agregar un nuevo elemento al array del estado inicial]
+```javascript
+// index.js
+ReactDOM.render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+  document.getElementById('root')
+);
 
-6. Ahora debemos conectar Redux con nuestra aplicación de React. Agregar un `Provider` del módulo de `react-redux` en nuestra aplicación (Archivo `App.js` de la carpeta `src`) para que la aplicación de React tenga conocimiento del store de Redux.
+```
 
-7. Crear los componentes que crean necesarios para el frontend de nuestra aplicación. El diseño de la misma debe ser algo similar a:
+### Componentes principales
 
-<div style="text-align:center"><img width=350 src="img/app-inicial.png"/></div><br>
+Comenzamos creando nuestros componentes principales.
 
-8. Conectar el estado del store donde se encuentra el listado de películas favoritas con el componente que corresponda utilizando `mapStateToProps` y mapearlo para que se visualicen dentro de dicho componente.
+NavBar: sera un componente estatico, tendra los links que nos permitan navegar hacia Favoritos y Home. Ej:
 
-9. Crear un formulario conectado que va a ser el encargado de agregar nuevas películas al estado global de la aplicación utilizando `mapDispatchToProps`. [Por el momento nos olvidaremos de la API y lo haremos de forma manual para verificar que funcione correctamente por lo que tendremos que tomar los valores de la película de un input]
+<div style="text-align:center"><img src="img/NavBar.png"/></div><br>
 
-__STOP__
+Buscador: Sera nuestra Home, nos permitira hacer pedidos a la API, traer la lista de peliculas y mostrarlas. Sera un componente de clase que maneje estados. Ej:
 
-* A esta altura del ejercicio, antes de continuar agregando más funcionalidad, deberíamos ya poder correr nuestra aplicación y comprobar la conexión entre nuestros componentes de React y el estado global de la aplicación manejado con Redux. Deberían lograr lo siguiente (Sin considerar cuestiones estéticas en nuestro caso):
+<div style="text-align:center"><img src="img/Buscador.png"/></div><br>
 
-<div style="text-align:center"><img src="img/agregar-pelicula.gif"/></div><br>
 
-__CONTINUEMOS__
+Una vez que tenemos estos componentes:
 
-10. Ahora queremos obtener un listado de películas desde la API (Consultar la documentación [acá](http://www.omdbapi.com/)) y para ello deberán crear una nueva acción a la que llamaremos `getData`, que recibirá el como parámetro el input que ingrese el usuario como filtro de búsqueda. [Recordar la utilización de un middlewares para manejar correctamente los request http]
 
-11. Modificar el reducer para que tome en cuenta esta nueva acción y guarde las películas recibidas en el estado global de la aplicación.
+### Creamos nuestro Reducer
 
-11. Mostrar todas las películas que retorne la API en un nuevo componente.
+Vamos al archivo `index.js` en nuestra carpeta reducers. Como vimos, un reducer es simplemente una funcion que recibe 2 parametros: state y action. Y depende la `action` que reciba nos devuelve el estado actualizado. Al comienzo del archivo creamos nuestro estado inicial. Lo llamamos `initialState`:
 
-__STOP__
+```javascript
+const initialState = {
+  movies: [],
+  moviesLoaded: []
+};
+```
+Por ahora tendremos un solo estado, despues iremos agregando mas. Pasamos a crear nuestro reducer:
 
-Veamos que tenemos hasta el momento. Por un lado la primer parte que realizamos simula el agregado de películas a nuestro listado de favoritos (Hasta el momento lo estamos realizando manualemnte ingresando el título de la película que queremos y clickeando el botón de `AGREGAR`). Por otro lado en la segunda parte logramos obtener todas las películas provenientes de la API a partir de un título ingresado en el formulario.
+```javascript
+function rootReducer(state = initialState, action) {
+  if (action.type === "ADD_MOVIE") {
+      return {
+        ...state,
+        movies: state.movies.concat(action.payload)
+      }
+  }
+  if (action.type === "DATA_LOADED") {
+      return {
+        ...state,
+        moviesLoaded: action.payload.Search
+      };
+  }
+  return state;
+}
 
-Por lo tanto el siguiente paso consistiría en actulizar el componente donde renderizamos cada película para agregar la posibilidad de clickear un botón y que la misma sea agregada o quitada directamente de la lista de favoritos.
+export default rootReducer;
+```
 
-<div style="text-align:center"><img src="img/add-to-fav.gif"/></div><br>
+Ya tenemos la base de nuestro reducer. Como sabemos el `initialState` es inmutable, por eso a la hora del return, hacemos una copia de este, con sintaxis de ES6 (spread operator) otra opcion seria usar `Object.assign({}, state, ...)`, y nos devuelve nuestro `state` actualizado. Exportamos el reducer para poder usarlo en nuestro store. Para entenderlo mejor pueden leer [aca](https://redux.js.org/recipes/structuring-reducers/immutable-update-patterns).
 
-__CONTINUEMOS__
+### Creamos nuestras Actions
 
-12. Agregar un botón de favorito a cada película del listado general y que al clikearlo se añada a la lista de favoritos y otro botón en la lista de favoritos para quitarlas de allí al hacer click.
+En nuestro archivo `index.js` en nuestra carpeta actions. Por ahora vamos a crear 2 actions. Una para hacer la request a la API y traer las peliculas, y la otra para agregarlas como Favoritas.
 
-13. Mejorar la interfaz de usuario. Hasta el momento tenemos renderizados todos los componentes en una misma página por lo que ahora convendría separarlo en distintas rutas según lo indicado en el apartado de `rutas` de este documento
+```javascript
+export function addMovie(payload) {
+  return { type: "ADD_MOVIE", payload };
+}
 
-14. Permitir clickear una película para acceder a la información completa de la misma y que redirija a la ruta `/movie/:movieId`. El ID de la película es el de OMDB y con el debemos realizar un request a la API para obtener los siguientes datos de dicha película:
+export function getData(titulo) {
+  return function(dispatch) {
+    return fetch("http://www.omdbapi.com/?apikey=20dac387&s=" + titulo)
+      .then(response => response.json())
+      .then(json => {
+        dispatch({ type: "DATA_LOADED", payload: json });
+      });
+  };
+}
+```
+Cada accion devuelve un objecto, la primera key de este objecto es el `type`, su valor lo ponemos nosotros, por convencion se usan mayusculas y guion bajo (_) para separar. Como segundo argumento recibe un `payload`, que son datos que puede llevar que usaremos en nuestro reducer para actualizar el estado. En `addMovie` el payload que pasaremos cuando hagamos un dispatch de esa action sera el nombre de la Pelicula, en `getData`, nuestro payload sera el objeto que recibamos de nuestra request.
 
-  * Título [Title]
-  * Año [Year]
-  * Calificación [Rated]
-  * Fecha de Estreno [Released]
-  * Duración [Runtime]
-  * Género [Genre]
-  * Descripicón [Plot]
-  * Actores [Actors]
-  * Puntuación [imdbRating]
+### Armamos nuestro store
 
-### Extras
+Ahora pasamos a crear nuestro Store Global que tendra todo nuestro State. Vamos a nuestro archivo `index.js` en nuestra carpeta store, tenemos que importar `CreateStore` de 'redux', por ahora nos deberia quedar asi:
+
+```javascript
+import { createStore } from "redux";
+
+const store = createStore();
+
+export default store;
+```
+La funciton `createStore` recibe argumentos. Primero le pasaremos nuestro `rootReducer` y despues nuestro Middleware para poder hacer peticiones asincronas en nuestro codigo.
+
+### Conectamos el Store con nuestro rootReducer y Middleware
+
+Ya tenemos nuestro Reducer y nuestras actions. Entonces terminamos de conectar nuestro store, para esto importamos `applyMiddleware` de 'redux', `thunk` de la libreria 'redux-thunk' y nuestro Reducer. Pasamos como parametros en `createStore` nuestro rootReducer y applyMiddleware, a esta le pasamos nuestro middleware `thunk`. Usamos un Middleware para poder hacer peticiones AJAX sin problemas. Nos quedaria algo asi:
+
+```javascript
+const store = createStore(
+  rootReducer,
+  applyMiddleware(thunk)
+);
+
+export default store;
+```
+
+### Conectamos nuestro Store con nuestra App de React
+
+Es hora de conectar todo. Para eso necesitaremos de un componente que nos brinda la libreria 'react-redux', que se llama `Provider`. En nuestro Provider llamamos a nuestro store, y con este envolvemos a toda nuestra App, para tener acceso a nuestro store desde cualquier componente hijo.
+
+```javascript
+//root index.js
+
+ReactDOM.render(
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </Provider>,
+  document.getElementById('root')
+);
+```
+Ya tenemos nuestro STORE conectado con nuestra App!
+
+### Conectamos nuestro componente con nuestro Store
+
+Usamos las funciones `mapStateToProps` y `mapDispatchToProps` dentro de nuestros componentes. La primera nos permite traer nuestro state global como props a nuestro componente, y la segunda nos permite hacer el `dispatch` de nuestras actions al store. Y para terminar de conectar nuestro componente con el store global usamos una HoC ( High Order Component ) que importamos de la libreria 'react-redux' que se llama `connect`. En nuestro componente `Busqueda.js` nos deberia quedar algo asi:
+
+```javascript
+function mapStateToProps(state) {
+  return {
+    movies: state.moviesLoaded
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    addMovie: movie => dispatch(addMovie(movie)),
+    getData: title => dispatch(getData(title))
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Post);
+```
+
+Pasamos a explicar un poco que estamos haciendo. `mapStateToProps` recibe como parametro `state` y nos devuelvo un objecto con parte del state que queremos, en este caso usamos la key 'movies' (accedemos a ella en nuestro componente como this.props.movies) y su value es la parte del estado que queremos traer, `moviesLoaded` en este caso.
+`mapDispatchToProps` recibe como parametro una funcion, la llamamos dispatch, y nos devuelve un objecto, con las acciones que queremos enviar a nuestro store. Los nombres son arbitrarios, son los que usaremos para acceder a estos en nuestro componentes via props. Cada funcion nos devuelve la funcion dispatch que recibe como parametro la action que queremos enviar al store, en nuestro caso son `addMovie` y `getData` que tenemos en nuestra carpeta `actions`. Los parametros que recibe cada function son los payloads que usamos en nuestra action.
+
+### Dispatch una accion desde nuestro componente
+
+Lo siguiente que haremos sera crear un form, con un input y un boton de type="submit". Nuestro form tendra un evento `onSubmit` que maneje la request. Nuestro evento simplemente ejecutara la funcion `getData`, a la cual le pasamos el valor del string ingresado en el input (nombre de pelicula). Como ayuda para obtener el valor ingresado en el input, podemos usar `React.createRef()` para tener una referencia del valor ingresado en el input o usando el evento `onChange` en el input y guardando el valor en el state del componente.
+
+### Obtener y mostrar nuestro cambio de State
+
+Una vez que hacemos el dispatch, ya tenemos nuestro state en nuestro Store, en `mapStateToProps` ya traemos el state que updeteamos en nuestro form. Ahora tenemos un array de objetos con las peliculas que nos trajo nuestra request a la API. El siguiente paso seria mapear ese array y hacer un return con el Nombre de la pelicula y un boton el cual tendra un evento de `onClick`. Este evento sera `addMovie`, que tenemos en nuestra `mapDispatchToProps` para guardar peliculas como Favoritas. Ej:
+
+<div style="text-align:center"><img src="img/show-movies.gif"/></div><br>
+
+ En el caso de `addMovie` como parametro le pasamos un object con el titulo de la Pelicula y su ID, que mas adelante utilizaremos en el componente Favorites. Ej:
+
+```javascript
+//Recordamos que nuestro button se encuentra dentro del metodo map
+
+<button onClick={() => this.props.addMovie({title: movie.Title, id: movie.imdbID})}>Fav</button>
+```
+
+Hasta ahora tenemos nuestro componente Home, en donde podemos buscar peliculas, guardarlas en nuestro state global, y mostrarlas. Las peliculas que nos trae la request la estamos guardando en `moviesLoaded` y las que seleccionamos como favoritas en `movies`. El siguiente paso sera comenzar a hacer el enrutado para mostrar nuestras pelis Favoritas.
+
+### Creamos componente Favorites y hacemos el Enrutado
+
+En `components` creamos una subcarpeta Favorites en donde tendremos nuestro componente `Favorites.js` y `Favorites.css`. Este sera un componente de clase, que llame a `mapStateToProps` y `mapDispatchToProps` como hicimos anteriormente. `mapStateToProps` nos traera simplemente `state.movies` y  `mapDispatchToProps` tendra un dispatch para eliminar peliculas de favoritos. Del mismo modo para agregar una pelicula. Tenemos que agregar en nuestro reducer agregamos el caso para cuando nuestro action.type sea "REMOVE_MOVIE" por ejemplo, y que nos devuelva una copia del state y `movies` con su valor actualizado sin la pelicula que se selecciono para eliminar. Recordemos que el nombre de la pelicula la pasamos como payload en nuestro dispatch y usamos ese dato en nuestro reducer.
+Una vez que tenemos nuestro case en nuestro reducer. Vamos a nuestras `actions` y creamos una function que podemos llamar `removeMovie` que recibira nuestro payload como parametro y simplemente nos devolvera un objeto con nuestro type: "REMOVE_MOVIE" y nuestro payload. Ya tenemos lo que necesitamos para mostrar nuestras pelis favoritas y nuestro evento para eliminarlas. Como hicimos en `Buscador.js`, mapeamos nuestras peliculas, y hacemos un return con el nombre y un boton que tendra el evento para eliminarlas. Ej:
+
+<div style="text-align:center"><img src="img/favs-movies.gif"/></div><br>
+
+Ahora vamos a nuestro archivo `App.js` para hacer nuestro enrutado:
+
+```javascript
+function App() {
+  return (
+      <React.Fragment>
+          <NavBar />
+          <Route exact path="/" component={Buscador} />
+          <Route path="/favs" component={Favorites} />
+      </React.Fragment>
+  );
+}
+```
+Por ahora nos deberia quedar algo asi, despues agregaremos una ruta mas para mostrar una pelicula en detalle...
+No nos olvidamos de agregar los links de navegacion en nuestro componente `NavBar`.
+
+### Creamos componente Movie
+
+Ya nos queda poco! En `components` creamos una subcarpeta `Movie` en donde tendremos nuestro componente. Este tendra una ruta dinamica que cargaremos segun el ID de la pelicula que quieramos mostrar. En nuestra `App.js` la agregamos:
+
+```javascript
+function App() {
+  return (
+      <React.Fragment>
+          <NavBar />
+          <Route exact path="/" component={Buscador} />
+          <Route path="/favs" component={Favorites} />
+          <Route path="/movie/:id" component={Movie} />
+      </React.Fragment>
+  );
+}
+```
+Ahora tenemos que agregar una ultima `action`, que sera una request a la API para traer una pelicula especifica por ID. Nos deberia quedar algo asi:
+
+```javascript
+export function getMovieDetail(id) {
+  return function(dispatch) {
+    const url = `http://www.omdbapi.com/?apikey=20dac387&i=${id}&plot=full`
+    return fetch(url)
+      .then(response => response.json())
+      .then(json => {
+        dispatch({ type: "MOVIE_DETAIL", payload: json });
+      });
+  }
+}
+```
+Tenemos nuestra action type y nuestro payload sera nuestro objecto con todos los datos de la Pelicula. Nuestro siguiente paso sera agregar ese caso en nuestro reducer. Para mantener separados nuestro state, agregamos un valor a nuestro `initialState`, se puede llamar `movieDetail` y sera un objecto vacio. Ahora en nuestro reducer agregamos el caso para cuando nuestro action.type sea "MOVIE_DETAIL", como veniamos haciendo, hacemos una copia del state y en movieDetail agregamos nuestro action.payload. Por ultimo, en nuestro componente `Movie.js` llamamos a `mapDispatchToProps` para hacer la dispatch del action que recibira como parametro el id de la pelicula, y `mapStateToProps` que nos traera `state.movieDetail`. Ahora lo unico que nos falta es saber que ID le pasamos a nuestra funcion `getMovieDetail` cuando la llamamos para que nos traiga una pelicula especifica. Ese ID lo recibiremos en nuestros parametros de la url. En nuestros componentes `Favorites.js` y `Buscador.js` veremos que cuando mapeamos nuestro array con peliculas, cada pelicula tiene un `imdbID` usaremos ese ID como parametro, entonces en donde renderizamos el Titulo de la Pelicula, lo envolvemos en un Link y le pasamos como parametro ese ID que recibimos. Algo asi:
+
+```javascript
+//Buscador.js 
+
+<Link to={`/movie/${movie.imdbID}`}>
+  {movie.Title}
+</Link>
+```
+
+Ahora cuando hagamos click en alguna pelicula nos deberia llevar a la ruta `/movie/{movie-id}`. En nuestro componente Movie tenemos que usar ese parametro para usarlo en nuestra `getMovieDetail` function. Podemos acceder a este valor gracias a las `props` que nos da `react-router` de la siguientes maneras:
+
+```javascript
+// usando destructuring
+const { match: { params: { id }}} = this.props;
+
+// manera convencional
+const movieId = this.props.match.params.id;
+```
+Llamamos a la funcion `getMovieDetail` y le pasamos nuestro ID. Una vez obtenido los datos tendriamos que tenerlos en `this.props.movieDetail` (obtenidos desde nuestro mapStateToProps). Y por ultimo mostramos detalles de la pelicula por ej: Titulo, Año, Rating, Plot, Premios, Genero, etc... Ej:
+
+<div style="text-align:center"><img src="img/movie-detail.gif"/></div><br>
+
+Con esto tendriamos una App integrado con React Redux!
+
+### Extra
 
 * Agregar un custom middleware que valide que las películas que estemos agregando a favoritos no esten ya incluidas
 

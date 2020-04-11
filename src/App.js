@@ -1,19 +1,19 @@
 import React from "react";
 
-import List from "./components/List/List";
-import Post from "./components/Post/Post";
+import Favorites from "./components/Favorites/Favorites";
+import Buscador from "./components/Buscador/Buscador";
 import NavBar from "./components/NavBar/NavBar";
 import { Route } from "react-router-dom";
 import Movie from "./components/Movie/Movie";
 
 function App() {
   return (
-      <div id="bodyContainer">
+      <React.Fragment>
           <NavBar />
-          <Route exact path="/" component={Post} />
-          <Route path="/favs" component={List} />
+          <Route exact path="/" component={Buscador} />
+          <Route path="/favs" component={Favorites} />
           <Route path="/movie/:id" component={Movie} />
-      </div>
+      </React.Fragment>
   );
 }
 

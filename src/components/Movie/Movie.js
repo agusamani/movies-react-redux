@@ -5,21 +5,10 @@ import { getMovieDetail } from '../../actions/index';
 import './Movie.css';
 
 class Movie extends React.Component {
-    constructor(props) {
-        super(props)
-    
-        this.state = {
-           movie: {},
-           error: 'Ocurrio un error!!'
-        }
-    
-    }
 
     componentDidMount() {
         const { match: { params: { id }}} = this.props;
-        console.log(id, 'idddd')
         this.props.getMovieDetail(id)
-        console.log(this.props)
      }
 
     truncate(str, num) {
@@ -40,27 +29,26 @@ class Movie extends React.Component {
                 <div className="movie-card">
                     <div className="container">
                     <div className="photo-cnt">
-                        {/* <img src={Poster}></img> */}
                         <div className="details">
                             <div className="title">{Title} <span>{Rated}</span></div> 
                             <div>{Year}</div>
                         </div> 
                     </div>
-                        <div className="column">
-                            <p>{truncPlot}</p>
+                    <div className="column">
+                        <p>{truncPlot}</p>
+                    </div>
+                    <div className="container2">
+                        <div className="img">
+                            <img alt="img" src={Poster}></img>
                         </div>
-                        <div className="container2">
-                            <div className="img">
-                                <img alt="img" src={Poster}></img>
-                            </div>
-                            <ul className="mas-info">
-                                <li>Director: {Director}</li>
-                                <li>BoxOffice: {BoxOffice}</li>
-                                <li>imdbRating: {imdbRating}</li>
-                                <li>Genre: {Genre}</li>
-                                <li>Awards: {Awards}</li>                
-                            </ul>
-                        </div>
+                        <ul className="mas-info">
+                            <li>Director: {Director}</li>
+                            <li>BoxOffice: {BoxOffice}</li>
+                            <li>imdbRating: {imdbRating}</li>
+                            <li>Genre: {Genre}</li>
+                            <li>Awards: {Awards}</li>                
+                        </ul>
+                    </div>
                     </div> 
                 </div> 
             </div>
