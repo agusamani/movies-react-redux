@@ -24,7 +24,6 @@ Agregar las carpetas actions, components, constants, middleware, reducers y stor
 │   ├── /middleware
 │   ├── /reducers
 │   ├── /store
-│   ├── App.css
 │   ├── App.js
 │   ├── App.test.js
 │   ├── index.css
@@ -96,11 +95,11 @@ Comenzamos creando nuestros componentes principales.
 
 NavBar: sera un componente estatico, tendra los links que nos permitan navegar hacia Favoritos y Home. Ej:
 
-<div style="text-align:center"><img src="img/NavBar.png"/></div><br>
+<div style="text-align:center"><img src="src/img/NavBar.png"/></div><br>
 
 Buscador: Sera nuestra Home, nos permitira hacer pedidos a la API, traer la lista de peliculas y mostrarlas. Sera un componente de clase. Ej:
 
-<div style="text-align:center"><img src="img/Buscador.png"/></div><br>
+<div style="text-align:center"><img src="src/img/Buscador.png"/></div><br>
 
 
 Una vez que tenemos estos componentes:
@@ -116,7 +115,7 @@ const initialState = {
   moviesLoaded: []
 };
 ```
-Por ahora tendremos un solo estado, despues iremos agregando mas. Pasamos a crear nuestro reducer:
+Por ahora tendremos `movies` y `moviesLoaded`, despues agregaremos mas. Pasamos a crear nuestro reducer:
 
 ```javascript
 function rootReducer(state = initialState, action) {
@@ -210,6 +209,8 @@ Ya tenemos nuestro STORE conectado con nuestra App!
 Usamos las funciones `mapStateToProps` y `mapDispatchToProps` dentro de nuestros componentes. La primera nos permite traer nuestro state global como props a nuestro componente, y la segunda nos permite hacer el `dispatch` de nuestras actions al store. Y para terminar de conectar nuestro componente con el store global usamos una HoC ( High Order Component ) que importamos de la libreria 'react-redux' que se llama `connect`. En nuestro componente `Busqueda.js` nos deberia quedar algo asi:
 
 ```javascript
+//Buscador.js 
+
 function mapStateToProps(state) {
   return {
     movies: state.moviesLoaded
@@ -226,7 +227,7 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Post);
+)(Buscador);
 ```
 
 Pasamos a explicar un poco que estamos haciendo. `mapStateToProps` recibe como parametro `state` y nos devuelvo un objecto con parte del state que queremos, en este caso usamos la key 'movies' (accedemos a ella en nuestro componente como this.props.movies) y su value es la parte del estado que queremos traer, `moviesLoaded` en este caso.
@@ -240,7 +241,7 @@ Lo siguiente que haremos sera crear un form, con un input y un boton de type="su
 
 Una vez que hacemos el dispatch, ya tenemos nuestro state en nuestro Store, en `mapStateToProps` ya traemos el state que updeteamos en nuestro form. Ahora tenemos un array de objetos con las peliculas que nos trajo nuestra request a la API. El siguiente paso seria mapear ese array y hacer un return con el Nombre de la pelicula y un boton el cual tendra un evento de `onClick`. Este evento sera `addMovie`, que tenemos en nuestra `mapDispatchToProps` para guardar peliculas como Favoritas. Ej:
 
-<div style="text-align:center"><img src="img/show-movies.gif"/></div><br>
+<div style="text-align:center"><img src="src/img/show-movies.gif"/></div><br>
 
  En el caso de `addMovie` como parametro le pasamos un object con el titulo de la Pelicula y su ID, que mas adelante utilizaremos en el componente Favorites. Ej:
 
@@ -257,7 +258,7 @@ Hasta ahora tenemos nuestro componente Home, en donde podemos buscar peliculas, 
 En `components` creamos una subcarpeta Favorites en donde tendremos nuestro componente `Favorites.js` y `Favorites.css`. Este sera un componente de clase, que llame a `mapStateToProps` y `mapDispatchToProps` como hicimos anteriormente. `mapStateToProps` nos traera simplemente `state.movies` y  `mapDispatchToProps` tendra un dispatch para eliminar peliculas de favoritos. Del mismo modo para agregar una pelicula. Tenemos que agregar en nuestro reducer agregamos el caso para cuando nuestro action.type sea "REMOVE_MOVIE" por ejemplo, y que nos devuelva una copia del state y `movies` con su valor actualizado sin la pelicula que se selecciono para eliminar. Recordemos que el nombre de la pelicula la pasamos como payload en nuestro dispatch y usamos ese dato en nuestro reducer.
 Una vez que tenemos nuestro case en nuestro reducer. Vamos a nuestras `actions` y creamos una function que podemos llamar `removeMovie` que recibira nuestro payload como parametro y simplemente nos devolvera un objeto con nuestro type: "REMOVE_MOVIE" y nuestro payload. Ya tenemos lo que necesitamos para mostrar nuestras pelis favoritas y nuestro evento para eliminarlas. Como hicimos en `Buscador.js`, mapeamos nuestras peliculas, y hacemos un return con el nombre y un boton que tendra el evento para eliminarlas. Ej:
 
-<div style="text-align:center"><img src="img/favs-movies.gif"/></div><br>
+<div style="text-align:center"><img src="src/img/favs-movies.gif"/></div><br>
 
 Ahora vamos a nuestro archivo `App.js` para hacer nuestro enrutado:
 
@@ -326,7 +327,7 @@ const movieId = this.props.match.params.id;
 ```
 Llamamos a la funcion `getMovieDetail` y le pasamos nuestro ID. Una vez obtenido los datos tendriamos que tenerlos en `this.props.movieDetail` (obtenidos desde nuestro mapStateToProps). Y por ultimo mostramos detalles de la pelicula por ej: Titulo, Año, Rating, Plot, Premios, Genero, etc... Ej:
 
-<div style="text-align:center"><img src="img/movie-detail.gif"/></div><br>
+<div style="text-align:center"><img src="src/img/movie-detail.gif"/></div><br>
 
 Con esto tendriamos una App integrado con React Redux!
 
